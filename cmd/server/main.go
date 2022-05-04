@@ -5,17 +5,16 @@ import (
 	"net/http"
 	"os"
 	"time"
-
-	"github.com/krzysztofla/Example.Go.Api/handlers"
 )
 
 func main() {
 	logger := log.New(os.Stdout, "Basket-Api", log.LstdFlags)
-	item_handler := handlers.NewItemHandler(logger)
+	get_handler := get.GetAllHandler(logger)
 
 	server_mux := http.NewServeMux()
 
-	server_mux.Handle("/allItems", item_handler)
+	server_mux.Handle("/allItems", get_handler)
+	server_mux.Handle("/items", get_handler)
 
 	http_server := &http.Server{
 		Addr:         ":8080",

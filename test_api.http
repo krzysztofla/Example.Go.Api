@@ -1,0 +1,3 @@
+## U need to install REST extension from VS marketplace to make it work
+
+GET http://localhost:8080/allItems
