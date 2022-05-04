@@ -3,14 +3,12 @@ package repository
 import (
 	"time"
 
-	"github.com/google/uuid"
-
 	m "github.com/krzysztofla/Example.Go.Api/models"
 )
 
 var itemsList = []*m.Item{
 	&m.Item{
-		UUID:        uuid.NewString(),
+		UUID:        "ffe5c744-3060-4413-9512-b2da5afea26e",
 		Name:        "Item 01",
 		Price:       1.11,
 		Description: "1",
@@ -19,7 +17,7 @@ var itemsList = []*m.Item{
 		DeletedAt:   "",
 	},
 	&m.Item{
-		UUID:        uuid.NewString(),
+		UUID:        "e54bcbc9-5d9b-4ef2-8b29-b954a5765bb3",
 		Name:        "Item 02",
 		Price:       2.22,
 		Description: "2",
@@ -28,7 +26,7 @@ var itemsList = []*m.Item{
 		DeletedAt:   "",
 	},
 	&m.Item{
-		UUID:        uuid.NewString(),
+		UUID:        "c8fcc2e2-4d68-48b1-8c01-30b26f013482",
 		Name:        "Item 03",
 		Price:       3.33,
 		Description: "3",
@@ -40,4 +38,13 @@ var itemsList = []*m.Item{
 
 func GetAllItems() []*m.Item {
 	return itemsList
+}
+
+func GetItemById(id string) *m.Item {
+	for _, item := range itemsList {
+		if item.UUID == id {
+			return item
+		}
+	}
+	return nil
 }

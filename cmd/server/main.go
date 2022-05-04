@@ -1,28 +1,16 @@
 package main
 
 import (
-	"log"
 	"net/http"
-	"os"
-	"time"
+
+	"github.com/gorilla/mux"
+	"github.com/krzysztofla/Example.Go.Api/router"
 )
 
 func main() {
-	logger := log.New(os.Stdout, "Basket-Api", log.LstdFlags)
-	get_handler := get.GetAllHandler(logger)
+	mux_router := mux.NewRouter()
 
-	server_mux := http.NewServeMux()
+	router.RegisterItemStoreRoutes(mux_router)
 
-	server_mux.Handle("/allItems", get_handler)
-	server_mux.Handle("/items", get_handler)
-
-	http_server := &http.Server{
-		Addr:         ":8080",
-		Handler:      server_mux,
-		IdleTimeout:  60 * time.Second,
-		ReadTimeout:  1 * time.Second,
-		WriteTimeout: 1 * time.Second,
-	}
-
-	http_server.ListenAndServe()
+	http.ListenAndServe("localhost:8080", mux_router)
 }
