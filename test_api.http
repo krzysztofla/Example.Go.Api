@@ -4,5 +4,9 @@
 GET http://localhost:8080/items/list
 
 ###
-## Gets items by coresponding item uuid
+## Gets items with coresponding item uuid
 GET http://localhost:8080/items/ffe5c744-3060-4413-9512-b2da5afea26e
+
+###
+## Delete item with coresponding item uuid
+DELETE  http://localhost:8080/items/ffe5c744-3060-4413-9512-b2da5afea26e

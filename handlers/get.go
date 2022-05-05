@@ -2,16 +2,12 @@ package handler
 
 import (
 	"encoding/json"
-	"log"
 	"net/http"
-	"os"
 	"strings"
 
 	"github.com/gorilla/mux"
 	inmemoryrepository "github.com/krzysztofla/Example.Go.Api/repository"
 )
-
-var logger = log.New(os.Stdout, "Basket-Api", log.LstdFlags)
 
 func GetAllItems(rw http.ResponseWriter, r *http.Request) {
 	rw.Header().Add("Content-Type", "application/json")
@@ -19,7 +15,7 @@ func GetAllItems(rw http.ResponseWriter, r *http.Request) {
 	payload, err := json.Marshal(items)
 	if err != nil {
 		http.Error(rw, "Unable to pars items payload", http.StatusInternalServerError)
-		logger.Println(err.Error())
+		Logger.Println(err.Error())
 	}
 
 	rw.Write(payload)
@@ -38,7 +34,7 @@ func GetItemById(rw http.ResponseWriter, r *http.Request) {
 		sb.WriteString(itemId)
 
 		http.Error(rw, sb.String(), http.StatusInternalServerError)
-		logger.Println(sb.String())
+		Logger.Println(sb.String())
 	}
 
 	res, _ := json.Marshal(item)

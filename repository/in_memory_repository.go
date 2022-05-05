@@ -48,3 +48,13 @@ func GetItemById(id string) *m.Item {
 	}
 	return nil
 }
+
+func DeleteItemById(id string) bool {
+	for index, item := range itemsList {
+		if item.UUID == id {
+			itemsList = append(itemsList[:index], itemsList[+1:]...)
+			return true
+		}
+	}
+	return false
+}
