@@ -1,8 +1,11 @@
 package repository
 
 import (
+	"encoding/json"
+	"net/http"
 	"time"
 
+	"github.com/google/uuid"
 	m "github.com/krzysztofla/Example.Go.Api/models"
 )
 
@@ -57,4 +60,14 @@ func DeleteItemById(id string) bool {
 		}
 	}
 	return false
+}
+
+func CreateItem(r *http.Request) {
+	var item m.Item
+	er := json.NewDecoder(r.Body).Decode(&item)
+	if er == nil {
+		item.UUID = uuid.New().String()
+		itemsList = append(itemsList, &item)
+
+	}
 }

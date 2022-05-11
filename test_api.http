@@ -10,3 +10,13 @@ GET http://localhost:8080/items/ffe5c744-3060-4413-9512-b2da5afea26e
 ###
 ## Delete item with coresponding item uuid
 DELETE  http://localhost:8080/items/ffe5c744-3060-4413-9512-b2da5afea26e
+
+###
+## Add new item to the db
+POST http://localhost:8080/items
+
+  {
+    "name": "Item 04",
+    "price": 1.11,
+    "description": "1"
+  }
