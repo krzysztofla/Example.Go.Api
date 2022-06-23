@@ -1,7 +1,7 @@
 ## U need to install REST extension from VS marketplace to make it work
 
 ## Lists all items in data store
-GET http://localhost:8080/items/list
+GET http://localhost:9091/items
 
 ###
 ## Gets items with coresponding item uuid

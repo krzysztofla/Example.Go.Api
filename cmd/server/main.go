@@ -1,20 +1,48 @@
 package main
 
 import (
+	"context"
 	"log"
 	"net/http"
 	"os"
+	"os/signal"
+	"time"
 
 	"github.com/krzysztofla/Example.Go.Api/handlers"
 )
 
 func main() {
 	logger := log.New(os.Stdout, "product-api", log.LstdFlags)
-	hh := handlers.NewHelloHandler(logger)
+	ph := handlers.NewProductsHandler(logger)
 
 	sm := http.NewServeMux()
 
-	sm.Handle("/hello", hh)
+	sm.Handle("/items", ph)
 
-	http.ListenAndServe(":9090", sm)
+	server := &http.Server{
+		Addr:         ":9091",
+		Handler:      sm,
+		IdleTimeout:  120 * time.Second,
+		ReadTimeout:  1 * time.Second,
+		WriteTimeout: 1 * time.Second,
+	}
+
+	// Graceful shutdown pattern - it will allow application to finish all the work in the controllers before shutdown. It will log the cause of shutdown.
+	go func() {
+		err := server.ListenAndServe()
+		if err != nil {
+			logger.Fatal(err)
+		}
+	}()
+
+	signalChannel := make(chan os.Signal)
+	signal.Notify(signalChannel, os.Interrupt)
+	signal.Notify(signalChannel, os.Kill)
+
+	sig := <-signalChannel
+
+	logger.Println("Graceful shutdown", sig)
+
+	timeoutContext, _ := context.WithTimeout(context.Background(), 40*time.Second)
+	server.Shutdown(timeoutContext)
 }
