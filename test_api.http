@@ -4,16 +4,25 @@
 GET http://localhost:9091/items
 
 ###
-## Gets items with coresponding item uuid
-GET http://localhost:8080/items/ffe5c744-3060-4413-9512-b2da5afea26e
-
+## Gets items with coresponding item id
+GET http://localhost:8080/items/1
 ###
-## Delete item with coresponding item uuid
-DELETE  http://localhost:8080/items/ffe5c744-3060-4413-9512-b2da5afea26e
+## Delete item with coresponding item id
+DELETE  http://localhost:8080/items/1
 
 ###
 ## Add new item to the db
 POST http://localhost:9091/items
+
+  {
+    "name": "Item 04",
+    "price": 1.11,
+    "description": "1"
+  }
+
+###
+## Add new item to the db
+PUT http://localhost:9091/items/1
 
   {
     "name": "Item 04",

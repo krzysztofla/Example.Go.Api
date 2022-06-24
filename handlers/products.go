@@ -4,6 +4,8 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
+	"regexp"
+	"strconv"
 
 	"github.com/krzysztofla/Example.Go.Api/data"
 )
@@ -25,6 +27,31 @@ func (p *Products) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	if r.Method == http.MethodPost {
 		p.AddProduct(rw, r)
 		return
+	}
+
+	if r.Method == http.MethodPut {
+		rgx := regexp.MustCompile(`/([0-9]+)`)
+		path := r.URL.Path
+		idg := rgx.FindAllStringSubmatch(path, -1)
+
+		if len(idg) != 1 {
+			http.Error(rw, "Invalid request", http.StatusBadRequest)
+			return
+		}
+
+		if len(idg[0]) != 2 {
+			http.Error(rw, "Invalid request", http.StatusBadRequest)
+			return
+		}
+
+		idString := idg[0][1]
+		id, err := strconv.Atoi(idString)
+
+		if err != nil {
+			http.Error(rw, " Invalid Request", http.StatusBadRequest)
+			return
+		}
+		p.l.Println(id)
 	}
 
 	rw.WriteHeader(http.StatusMethodNotAllowed)
@@ -49,4 +76,8 @@ func (p *Products) AddProduct(rw http.ResponseWriter, r *http.Request) {
 	encoder.Decode(prdt)
 
 	data.AddProduct(prdt)
+}
+
+func (p *Products) UpdateProduct(rw http.ResponseWriter, r *http.Request) {
+
 }

@@ -1,6 +1,7 @@
 package data
 
 import (
+	"errors"
 	"time"
 )
 
@@ -21,8 +22,24 @@ func GetProducts() []*Product {
 	return productList
 }
 
+func GetProductById(id int) (*Product, error) {
+	for _, item := range productList {
+		if item.ID == id {
+			return item, nil
+		}
+	}
+	return nil, errors.New("no item with given Id")
+}
+
 func AddProduct(p *Product) {
+	lp := productList[len(productList)-1]
+	p.ID = lp.ID
+	p.ID++
 	productList = append(productList, p)
+}
+
+func UpdateProduct(p *Product) {
+
 }
 
 var productList = []*Product{
