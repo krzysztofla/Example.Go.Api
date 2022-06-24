@@ -30,31 +30,9 @@ func (p *Products) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
 	}
 
 	if r.Method == http.MethodPut {
-		rgx := regexp.MustCompile(`/([0-9]+)`)
-		path := r.URL.Path
-		idg := rgx.FindAllStringSubmatch(path, -1)
-
-		if len(idg) != 1 {
-			http.Error(rw, "Invalid request", http.StatusBadRequest)
-			return
-		}
-
-		if len(idg[0]) != 2 {
-			http.Error(rw, "Invalid request", http.StatusBadRequest)
-			return
-		}
-
-		idString := idg[0][1]
-		id, err := strconv.Atoi(idString)
-
-		if err != nil {
-			http.Error(rw, " Invalid Request", http.StatusBadRequest)
-			return
-		}
-		p.l.Println(id)
+		p.UpdateProduct(rw, r)
+		return
 	}
-
-	rw.WriteHeader(http.StatusMethodNotAllowed)
 }
 
 func (p *Products) GetProducts(rw http.ResponseWriter, r *http.Request) {
@@ -79,5 +57,33 @@ func (p *Products) AddProduct(rw http.ResponseWriter, r *http.Request) {
 }
 
 func (p *Products) UpdateProduct(rw http.ResponseWriter, r *http.Request) {
+	p.l.Println("PUT Method Invocation - Add New Product")
+	rgx := regexp.MustCompile(`/([0-9]+)`)
+	path := r.URL.Path
+	idg := rgx.FindAllStringSubmatch(path, -1)
 
+	if len(idg) != 1 {
+		http.Error(rw, "Invalid request", http.StatusBadRequest)
+		return
+	}
+
+	if len(idg[0]) != 2 {
+		http.Error(rw, "Invalid request", http.StatusBadRequest)
+		return
+	}
+
+	idString := idg[0][1]
+	id, err := strconv.Atoi(idString)
+
+	if err != nil {
+		http.Error(rw, " Invalid Request", http.StatusBadRequest)
+		return
+	}
+	encoder := json.NewDecoder(r.Body)
+	prdt := &data.Product{}
+
+	encoder.Decode(prdt)
+
+	data.UpdateProduct(id, prdt)
+	rw.WriteHeader(http.StatusMethodNotAllowed)
 }

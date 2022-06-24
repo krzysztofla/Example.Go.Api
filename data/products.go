@@ -38,8 +38,16 @@ func AddProduct(p *Product) {
 	productList = append(productList, p)
 }
 
-func UpdateProduct(p *Product) {
-
+func UpdateProduct(id int, p *Product) error {
+	prod, err := GetProductById(id)
+	if err != nil {
+		return errors.New("product not found")
+	}
+	prod.Name = p.Name
+	prod.Price = p.Price
+	prod.SKU = p.SKU
+	prod.UpdatedAt = time.Now().UTC().String()
+	return nil
 }
 
 var productList = []*Product{
