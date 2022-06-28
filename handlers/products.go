@@ -4,9 +4,9 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"regexp"
 	"strconv"
 
+	"github.com/gorilla/mux"
 	"github.com/krzysztofla/Example.Go.Api/data"
 )
 
@@ -41,27 +41,12 @@ func (p *Products) AddProduct(rw http.ResponseWriter, r *http.Request) {
 
 func (p *Products) UpdateProduct(rw http.ResponseWriter, r *http.Request) {
 	p.l.Println("PUT Method Invocation - Add New Product")
-	rgx := regexp.MustCompile(`/([0-9]+)`)
-	path := r.URL.Path
-	idg := rgx.FindAllStringSubmatch(path, -1)
-
-	if len(idg) != 1 {
-		http.Error(rw, "Invalid request", http.StatusBadRequest)
-		return
-	}
-
-	if len(idg[0]) != 2 {
-		http.Error(rw, "Invalid request", http.StatusBadRequest)
-		return
-	}
-
-	idString := idg[0][1]
-	id, err := strconv.Atoi(idString)
-
+	vars := mux.Vars(r)
+	id, err := strconv.Atoi(vars["id"])
 	if err != nil {
-		http.Error(rw, " Invalid Request", http.StatusBadRequest)
-		return
+		http.Error(rw, "unable to parse id", http.StatusInternalServerError)
 	}
+
 	encoder := json.NewDecoder(r.Body)
 	prdt := &data.Product{}
 

@@ -18,14 +18,14 @@ func main() {
 
 	sm := mux.NewRouter()
 
-	getRouter := sm.Methods("GET").Subrouter()
+	getRouter := sm.Methods(http.MethodGet).Subrouter()
 	getRouter.HandleFunc("/items", ph.GetProducts)
 
-	postRouter := sm.Methods("POST").Subrouter()
+	postRouter := sm.Methods(http.MethodPost).Subrouter()
 	postRouter.HandleFunc("/items", ph.AddProduct)
 
-	putRouter := sm.Methods("PUT").Subrouter()
-	putRouter.HandleFunc("/items/{id}", ph.UpdateProduct)
+	putRouter := sm.Methods(http.MethodPut).Subrouter()
+	putRouter.HandleFunc("/items/{id:[0-9]+}", ph.UpdateProduct)
 
 	server := &http.Server{
 		Addr:         ":9091",
