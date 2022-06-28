@@ -8,6 +8,7 @@ import (
 	"os/signal"
 	"time"
 
+	"github.com/gorilla/mux"
 	"github.com/krzysztofla/Example.Go.Api/handlers"
 )
 
@@ -15,9 +16,16 @@ func main() {
 	logger := log.New(os.Stdout, "product-api", log.LstdFlags)
 	ph := handlers.NewProductsHandler(logger)
 
-	sm := http.NewServeMux()
+	sm := mux.NewRouter()
 
-	sm.Handle("/", ph)
+	getRouter := sm.Methods("GET").Subrouter()
+	getRouter.HandleFunc("/items", ph.GetProducts)
+
+	postRouter := sm.Methods("POST").Subrouter()
+	postRouter.HandleFunc("/items", ph.AddProduct)
+
+	putRouter := sm.Methods("PUT").Subrouter()
+	putRouter.HandleFunc("/items/{id}", ph.UpdateProduct)
 
 	server := &http.Server{
 		Addr:         ":9091",

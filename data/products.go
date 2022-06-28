@@ -43,6 +43,8 @@ func UpdateProduct(id int, p *Product) error {
 	if err != nil {
 		return errors.New("product not found")
 	}
+
+	// todo find id from slice and replace with productList[id] = p
 	prod.Name = p.Name
 	prod.Price = p.Price
 	prod.SKU = p.SKU

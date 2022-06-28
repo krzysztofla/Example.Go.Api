@@ -18,23 +18,6 @@ func NewProductsHandler(l *log.Logger) *Products {
 	return &Products{l: l}
 }
 
-func (p *Products) ServeHTTP(rw http.ResponseWriter, r *http.Request) {
-	if r.Method == http.MethodGet {
-		p.GetProducts(rw, r)
-		return
-	}
-
-	if r.Method == http.MethodPost {
-		p.AddProduct(rw, r)
-		return
-	}
-
-	if r.Method == http.MethodPut {
-		p.UpdateProduct(rw, r)
-		return
-	}
-}
-
 func (p *Products) GetProducts(rw http.ResponseWriter, r *http.Request) {
 	p.l.Println("GET Method Invocation - Get All Products")
 	lp := data.GetProducts()
