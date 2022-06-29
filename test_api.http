@@ -25,6 +25,7 @@ POST http://localhost:9091/items
 PUT http://localhost:9091/items/1
 
   {
+    "id": 1,
     "name": "Item 0422",
     "price": 1.11,
     "description": "1"
