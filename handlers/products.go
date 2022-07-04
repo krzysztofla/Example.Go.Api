@@ -1,3 +1,17 @@
+// Package classification of Product API
+//
+// Documentation of Product API
+//
+// Schemas: http
+// BasePath: /
+// Version: 1.0.0
+//
+// Consumes:
+// - application/json
+//
+// Produces:
+// - application/json
+// swagger:meta
 package handlers
 
 import (
@@ -5,9 +19,7 @@ import (
 	"encoding/json"
 	"log"
 	"net/http"
-	"strconv"
 
-	"github.com/gorilla/mux"
 	"github.com/krzysztofla/Example.Go.Api/data"
 )
 
@@ -19,36 +31,6 @@ func NewProductsHandler(l *log.Logger) *Products {
 	return &Products{l: l}
 }
 
-func (p *Products) GetProducts(rw http.ResponseWriter, r *http.Request) {
-	p.l.Println("GET Method Invocation - Get All Products")
-	lp := data.GetProducts()
-	data, err := json.Marshal(lp)
-
-	if err != nil {
-		http.Error(rw, "", http.StatusInternalServerError)
-	}
-	rw.Write(data)
-}
-
-func (p *Products) AddProduct(rw http.ResponseWriter, r *http.Request) {
-	p.l.Println("POST Method Invocation - Add New Product")
-	prdt := r.Context().Value(KeyProduct{}).(data.Product)
-	data.AddProduct(&prdt)
-}
-
-func (p *Products) UpdateProduct(rw http.ResponseWriter, r *http.Request) {
-	p.l.Println("PUT Method Invocation - Add New Product")
-	vars := mux.Vars(r)
-	id, err := strconv.Atoi(vars["id"])
-
-	if err != nil {
-		http.Error(rw, "unable to parse id", http.StatusInternalServerError)
-	}
-	prdt := r.Context().Value(KeyProduct{}).(data.Product)
-
-	data.UpdateProduct(id, &prdt)
-}
-
 type KeyProduct struct{}
 
 func (p Products) MiddlewareProductValidation(next http.Handler) http.Handler {
@@ -57,6 +39,11 @@ func (p Products) MiddlewareProductValidation(next http.Handler) http.Handler {
 		encoder := json.NewDecoder(r.Body)
 
 		encoder.Decode(&prdt)
+
+		err := prdt.Validate()
+		if err != nil {
+			http.Error(rw, "Validation error. Please make sure all properties are ok", http.StatusBadRequest)
+		}
 
 		ctx := context.WithValue(r.Context(), KeyProduct{}, prdt)
 		r = r.WithContext(ctx)
