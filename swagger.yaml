@@ -8,7 +8,16 @@ info:
     Schemas: http
   title: of Product API
   version: 1.0.0
-paths: {}
+paths:
+  /items:
+    get:
+      description: Return a list of products from the database
+      operationId: listProducts
+      responses:
+        "200":
+          $ref: '#/responses/productsResponse'
+      tags:
+      - products
 produces:
 - application/json
 swagger: "2.0"

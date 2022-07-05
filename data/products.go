@@ -1,49 +1,66 @@
 package data
 
 import (
-	"errors"
+	"fmt"
 	"time"
-
-	"github.com/go-playground/validator"
 )
 
+// ErrProductNotFound is an error raised when a product can not be found in the database
+var ErrProductNotFound = fmt.Errorf("Product not found")
+
 type Product struct {
-	ID          int     `json:"Id"`
-	Name        string  `json:"name" validate:"required"`
-	Description string  `json:"description"`
-	Price       float32 `json:"price" validate:"gt=0"`
-	SKU         string  `json:"sku" validate:"required,sku"`
-	CreatedAt   string  `json:"-"`
-	UpdatedAt   string  `json:"-"`
-	DeletedAt   string  `json:"-"`
+	// the id for the product
+	//
+	// required: false
+	// min: 1
+	ID int `json:"id"` // Unique identifier for the product
+
+	// the name for this poduct
+	//
+	// required: true
+	// max length: 255
+	Name string `json:"name" validate:"required"`
+
+	// the description for this poduct
+	//
+	// required: false
+	// max length: 10000
+	Description string `json:"description"`
+
+	// the price for the product
+	//
+	// required: true
+	// min: 0.01
+	Price float32 `json:"price" validate:"required,gt=0"`
+
+	// the SKU for the product
+	//
+	// required: true
+	// pattern: [a-z]+-[a-z]+-[a-z]+
+	SKU       string `json:"sku" validate:"sku"`
+	CreatedAt string `json:"-"`
+	UpdatedAt string `json:"-"`
+	DeletedAt string `json:"-"`
 }
 
+// Products defines a slice of Product
 type Products []*Product
 
+// GetProducts returns all products from the database
 func GetProducts() []*Product {
 	return productList
 }
 
-func (p *Product) Validate() error {
-	validate := validator.New()
-	validate.RegisterValidation("sku", validateSKU)
-	return validate.Struct(p)
-}
-
-func validateSKU(fl validator.FieldLevel) bool {
-	if fl.Field().String() == "invalid" {
-		return false
-	}
-	return true
-}
-
+// GetProductByID returns a single product which matches the id from the
+// database.
+// If a product is not found this function returns a ProductNotFound error
 func GetProductById(id int) (*Product, error) {
 	for _, item := range productList {
 		if item.ID == id {
 			return item, nil
 		}
 	}
-	return nil, errors.New("no item with given Id")
+	return nil, ErrProductNotFound
 }
 
 func AddProduct(p *Product) {
@@ -56,7 +73,7 @@ func AddProduct(p *Product) {
 func UpdateProduct(id int, p *Product) error {
 	prod, err := GetProductById(id)
 	if err != nil {
-		return errors.New("product not found")
+		return ErrProductNotFound
 	}
 
 	// todo find id from slice and replace with productList[id] = p

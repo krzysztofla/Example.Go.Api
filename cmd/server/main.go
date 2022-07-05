@@ -29,6 +29,12 @@ func main() {
 	putRouter.Use(ph.MiddlewareProductValidation)
 	putRouter.HandleFunc("/items/{id}", ph.UpdateProduct)
 
+	opts := middleware.Redoc{SpecURL: "/swagger.yaml"}
+	sh := middleware.Redoc(opts, nil)
+
+	getR.Handle("/docs", sh)
+	getR.Handle("/swagger.yaml", http.FileServer(http.Dir("./")))
+
 	server := &http.Server{
 		Addr:         ":9091",
 		Handler:      sm,
