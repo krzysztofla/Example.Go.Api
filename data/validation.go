@@ -2,9 +2,25 @@ package data
 
 import (
 	"fmt"
+	"regexp"
 
 	"github.com/go-playground/validator"
 )
+
+// ValidationError wraps the validators FieldError so we do not
+// expose this to out code
+type ValidationError struct {
+	validator.FieldError
+}
+
+func (v ValidationError) Error() string {
+	return fmt.Sprintf(
+		"Key: '%s' Error: Field validation for '%s' failed on the '%s' tag",
+		v.Namespace(),
+		v.Field(),
+		v.Tag(),
+	)
+}
 
 // ValidationErrors is a collection of ValidationError
 type ValidationErrors []ValidationError
@@ -64,4 +80,3 @@ func validateSKU(fl validator.FieldLevel) bool {
 
 	return false
 }
-Footer

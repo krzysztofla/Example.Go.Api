@@ -14,8 +14,9 @@ func (p Products) MiddlewareProductValidation(next http.Handler) http.Handler {
 		encoder := json.NewDecoder(r.Body)
 
 		encoder.Decode(&prdt)
+		validation := data.NewValidation()
 
-		err := prdt.Validate()
+		err := validation.Validate(prdt)
 		if err != nil {
 			http.Error(rw, "Validation error. Please make sure all properties are ok", http.StatusBadRequest)
 		}
