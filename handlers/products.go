@@ -28,9 +28,8 @@ func NewProductsHandler(l *log.Logger) *Products {
 	return &Products{l: l}
 }
 
-// list of product in a response payload
-// swagger:
 type productsResponse struct {
 	Body []data.Product
 }
+
 type KeyProduct struct{}

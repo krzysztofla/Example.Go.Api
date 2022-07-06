@@ -1,6 +1,42 @@
 basePath: /
 consumes:
 - application/json
+definitions:
+  Product:
+    properties:
+      description:
+        description: the description for this poduct
+        maxLength: 10000
+        type: string
+        x-go-name: Description
+      id:
+        description: the id for the product
+        format: int64
+        minimum: 1
+        type: integer
+        x-go-name: ID
+      name:
+        description: the name for this poduct
+        maxLength: 255
+        type: string
+        x-go-name: Name
+      price:
+        description: the price for the product
+        format: float
+        minimum: 0.01
+        type: number
+        x-go-name: Price
+      sku:
+        description: the SKU for the product
+        pattern: '[a-z]+-[a-z]+-[a-z]+'
+        type: string
+        x-go-name: SKU
+    required:
+    - name
+    - price
+    - sku
+    type: object
+    x-go-package: github.com/krzysztofla/Example.Go.Api/data
 info:
   description: |-
     Documentation of Product API
@@ -44,4 +80,11 @@ paths:
       - products
 produces:
 - application/json
+responses:
+  productsResponse:
+    description: A list of products
+    schema:
+      items:
+        $ref: '#/definitions/Product'
+      type: array
 swagger: "2.0"
