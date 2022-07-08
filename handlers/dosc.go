@@ -24,3 +24,11 @@ type productsResponseWrapper struct {
 	// in: body
 	Body []data.Product
 }
+
+// single product
+// swagger: response productResponse
+type producstResponseWrapper struct {
+	// Producst with corresponding id
+	// in: body
+	Body data.Product
+}
