@@ -16,8 +16,6 @@ package handlers
 
 import (
 	"log"
-
-	"github.com/krzysztofla/Example.Go.Api/data"
 )
 
 type Products struct {
@@ -28,8 +26,9 @@ func NewProductsHandler(l *log.Logger) *Products {
 	return &Products{l: l}
 }
 
-type productsResponse struct {
-	Body []data.Product
-}
-
 type KeyProduct struct{}
+
+// ValidationError is a collection of validation error messages
+type ValidationError struct {
+	Messages []string `json:"messages"`
+}
